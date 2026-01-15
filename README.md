@@ -76,6 +76,8 @@ The server follows a **Boss-Worker Multithreading Pattern**:
 ├── Makefile        # Build configuration
 └── README.md       # Documentation
 
+```
+
 🤝 Contributing
 This is an educational project, but suggestions and optimizations are welcome. Feel free to open an issue.
 
