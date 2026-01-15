@@ -47,7 +47,7 @@ The server follows a **Boss-Worker Multithreading Pattern**:
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/carlos888nasa/server-http-c.git](https://github.com/carlos888nasa/server-http-c.git)
+    git clone https://github.com/carlos888nasa/server-http-c.git
     cd server-http-c
     ```
 
