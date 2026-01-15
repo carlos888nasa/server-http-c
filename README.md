@@ -1,0 +1,83 @@
+# C-Web-Server (Built from Scratch)
+
+![Language](https://img.shields.io/badge/language-C-blue.svg)
+![Standard](https://img.shields.io/badge/standard-C11-green.svg)
+![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
+
+A high-performance, multithreaded HTTP/1.1 server implemented entirely in pure C using the Berkeley Sockets API. 
+
+**No external networking libraries. No shortcuts.**
+
+## 📖 About The Project
+
+The main goal of this project is to demystify the inner workings of web servers like Nginx or Apache. By building it from scratch, I aim to gain a deep, low-level understanding of:
+* **TCP/IP Protocols:** Handling connections, packet buffering, and data streams manually.
+* **Unix Systems Programming:** Manipulating File Descriptors, Signals, and System Calls.
+* **Concurrency Models:** Implementing a **Thread Pool** to handle multiple clients simultaneously without the overhead of forking processes.
+* **Memory Management:** Strict control over the Heap and Stack to prevent memory leaks in a long-running service.
+
+## 🚀 Key Features (Planned & Implemented)
+
+This project is evolving from a basic socket listener to a fully functional web server.
+
+- [x] **Core Networking:** TCP Socket creation, binding, and listening (IPv4).
+- [x] **Modular Architecture:** Separation of concerns (Server logic, HTTP protocol, File handling).
+- [ ] **HTTP/1.1 Parser:** Manual parsing of Headers, Methods (GET, POST), and Bodies.
+- [ ] **Concurrency (Thread Pool):** A pre-allocated pool of worker threads ("Boss-Worker" model) to handle high-traffic loads efficiently.
+- [ ] **Static File Serving:** Serving HTML, CSS, JS, and images from the disk.
+- [ ] **MIME Type Support:** Dynamic content-type headers based on file extensions.
+- [ ] **Error Handling:** robust 404 (Not Found) and 500 (Internal Server Error) pages.
+
+## 🛠️ Technical Architecture
+
+The server follows a **Boss-Worker Multithreading Pattern**:
+
+1.  **Main Thread (The Boss):** Listens on port `8080`. It accepts incoming connections (`accept()`) and pushes the new socket descriptor into a **Task Queue**.
+2.  **Worker Threads:** A fixed number of threads (e.g., 10) sleep until a task arrives. They wake up, pick the socket from the queue, process the HTTP request, send the response, and close the connection.
+3.  **Synchronization:** Uses `mutex` and `condition variables` (from `<pthread.h>`) to prevent race conditions when accessing the shared queue.
+
+## 📦 Getting Started
+
+### Prerequisites
+* **OS:** Linux (Ubuntu/Debian) or Windows via WSL2.
+* **Compiler:** GCC.
+* **Build Tool:** GNU Make.
+
+### Installation & Usage
+
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/carlos888nasa/server-http-c.git](https://github.com/carlos888nasa/server-http-c.git)
+    cd server-http-c
+    ```
+
+2.  **Compile the source code:**
+    The project uses a Makefile for automated builds.
+    ```bash
+    make
+    ```
+
+3.  **Run the server:**
+    Pass the desired port as an argument.
+    ```bash
+    ./bin/server 8080
+    ```
+
+4.  **Test it:**
+    Open your browser and navigate to `http://localhost:8080`
+
+## 📂 Project Structure
+
+```text
+.
+├── src/            # Source code (.c)
+├── include/        # Header files (.h)
+├── bin/            # Compiled executables (ignored by git)
+├── Makefile        # Build configuration
+└── README.md       # Documentation
+
+🤝 Contributing
+This is an educational project, but suggestions and optimizations are welcome. Feel free to open an issue.
+
+📝 License
+Distributed under the MIT License.
