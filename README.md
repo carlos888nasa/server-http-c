@@ -78,8 +78,8 @@ The server follows a **Boss-Worker Multithreading Pattern**:
 
 ```
 
-🤝 Contributing
+## 🤝 Contributing
 This is an educational project, but suggestions and optimizations are welcome. Feel free to open an issue.
 
-📝 License
+## 📝 License
 Distributed under the MIT License.
