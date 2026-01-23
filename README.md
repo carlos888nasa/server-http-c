@@ -22,11 +22,13 @@ This project is evolving from a basic socket listener to a fully functional web 
 
 - [x] **Core Networking:** TCP Socket creation, binding, and listening (IPv4).
 - [x] **Modular Architecture:** Separation of concerns (Server logic, HTTP protocol, File handling).
-- [ ] **HTTP/1.1 Parser:** Manual parsing of Headers, Methods (GET, POST), and Bodies.
+- [x] **HTTP/1.1 Parser:** Manual parsing of Headers, Methods (GET, POST), and Bodies.
 - [ ] **Concurrency (Thread Pool):** A pre-allocated pool of worker threads ("Boss-Worker" model) to handle high-traffic loads efficiently.
 - [ ] **Static File Serving:** Serving HTML, CSS, JS, and images from the disk.
 - [ ] **MIME Type Support:** Dynamic content-type headers based on file extensions.
 - [ ] **Error Handling:** robust 404 (Not Found) and 500 (Internal Server Error) pages.
+- [ ] **HTTP Router:** URL parsing to direct traffic between files and APIs.
+- [ ] **JSON API Endpoint:** Serving dynamic data for backend applications.
 
 ## 🛠️ Technical Architecture
 
@@ -73,6 +75,7 @@ The server follows a **Boss-Worker Multithreading Pattern**:
 ├── src/            # Source code (.c)
 ├── include/        # Header files (.h)
 ├── bin/            # Compiled executables (ignored by git)
+├── www/            # Static website files (HTML, CSS)
 ├── Makefile        # Build configuration
 └── README.md       # Documentation
 
