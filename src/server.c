@@ -51,6 +51,18 @@ void server_start(Server *server){
         if(file != NULL){ 
 
             printf("✅ Serving file...\n");
+
+            char file_content[BUFFER_SIZE] = {0};
+            char http_header[BUFFER_SIZE] = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+            char response[BUFFER_SIZE * 2] = {0};
+
+            fread(file_content, 1, BUFFER_SIZE, file);
+
+            strcat(response, http_header);
+            strcat(response, file_content);
+
+            send(client_socket, response, strlen(response), 0);
+
             fclose(file);
 
         }else {
