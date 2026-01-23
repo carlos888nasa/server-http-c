@@ -12,6 +12,8 @@ typedef struct{
     
 }Server;
 
+void server_start(Server *server);
+
 Server server_constructor(int port);
 
 #endif 
