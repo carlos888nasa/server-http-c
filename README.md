@@ -4,7 +4,7 @@
 ![Standard](https://img.shields.io/badge/standard-C11-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
 
-A high-performance HTTP/1.1 server implemented entirely in pure C using the Berkeley Sockets API. Currently evolving from a stable single-threaded loop into a Boss-Worker multithreaded architecture.
+A low-level HTTP/1.1 server written in pure C, focused on performance-oriented design, using the Berkeley Sockets API.
 
 **No external networking libraries. No shortcuts.**
 
@@ -22,7 +22,7 @@ This project is evolving from a basic socket listener to a fully functional web 
 
 - [x] **Core Networking:** TCP Socket creation, binding, and listening (IPv4).
 - [x] **Modular Architecture:** Separation of concerns (Server logic, HTTP protocol, File handling).
-- [x] **HTTP/1.1 Parser:** Manual parsing of Headers, Methods (GET, POST), and Bodies.
+- [x] HTTP Parser: Basic HTTP/1.1 request parsing (extracting methods, paths, and headers).
 - [ ] **Concurrency (Thread Pool):** A pre-allocated pool of worker threads ("Boss-Worker" model) to handle high-traffic loads efficiently.
 - [x] **Static File Serving:** Serving HTML, CSS, JS, and images from the disk.
 - [ ] **MIME Type Support:** Dynamic content-type headers based on file extensions.
@@ -30,7 +30,7 @@ This project is evolving from a basic socket listener to a fully functional web 
 - [x] **HTTP Router:** URL parsing to direct traffic between files and APIs.
 - [x] **JSON API Endpoint:** Serving dynamic data for backend applications.
 - [ ] **Security (Path Traversal):** Blocking malicious requests trying to access root files via `../`.
-- [ ] **POST Requests:** Handling data submission from HTML forms or API clients.
+- [ ] **POST Processing:** Semantic handling of form data and API payloads (creating/updating resources).
 - [ ] **Custom Logger:** Real-time access logs with timestamps and status codes.
 
 ## 🛠️ Technical Architecture
@@ -58,6 +58,12 @@ The server follows a **Boss-Worker Multithreading Pattern**:
 | GET    | `/api`        | Returns backend server status data               | `application/json` |
 | GET    | `/*`          | Dynamic file router (fetches matching file)      | `text/html`        |
 | GET    | `/invalid`    | Returns custom Dark Mode 404 Page                | `text/html`        |
+
+## 🧪 Testing & Validation
+
+- **Manual Testing:** Endpoints verified via browser and `curl`.
+- **Memory Safety:** `Valgrind` verification planned to ensure zero memory leaks.
+- **Stress Testing:** Load testing (using `ab` or `wrk`) planned for the upcoming multithreaded phase.
 
 ### Installation & Usage
 
