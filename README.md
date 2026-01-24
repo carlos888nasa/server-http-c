@@ -4,7 +4,7 @@
 ![Standard](https://img.shields.io/badge/standard-C11-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
 
-A high-performance, multithreaded HTTP/1.1 server implemented entirely in pure C using the Berkeley Sockets API. 
+A high-performance HTTP/1.1 server implemented entirely in pure C using the Berkeley Sockets API. Currently evolving from a stable single-threaded loop into a Boss-Worker multithreaded architecture.
 
 **No external networking libraries. No shortcuts.**
 
@@ -34,6 +34,8 @@ This project is evolving from a basic socket listener to a fully functional web 
 - [ ] **Custom Logger:** Real-time access logs with timestamps and status codes.
 
 ## 🛠️ Technical Architecture
+
+(Note: The server is currently running on a robust single-threaded event loop. The following multithreaded architecture is actively under development).
 
 The server follows a **Boss-Worker Multithreading Pattern**:
 
@@ -78,7 +80,12 @@ The server follows a **Boss-Worker Multithreading Pattern**:
     ```
 
 4.  **Test it:**
-    Open your browser and navigate to `http://localhost:8080`
+    Open your browser and navigate to `http://localhost:8080`, or test the JSON API directly from your terminal using `curl`:
+
+    ```bash
+    curl -i http://localhost:8080/api
+    ```
+    *(Expected output: HTTP/1.1 200 OK with the server status in JSON format).*
 
 ## 📂 Project Structure
 
