@@ -42,6 +42,35 @@ void server_start(Server *server){
 
         }
 
+        if(!strcmp(path, "/api")){
+
+            // Simple API response
+            printf("✅ Serving API response...\n");
+
+            FILE *file_api = fopen("data/status.json", "r");
+        
+            if(file_api != NULL){
+
+                char file_content[BUFFER_SIZE] = {0};
+                char http_header[BUFFER_SIZE] = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n";
+                char response[BUFFER_SIZE * 2] = {0};
+
+                fread(file_content, 1, BUFFER_SIZE, file_api);
+
+                strcat(response, http_header);
+                strcat(response, file_content);
+
+                send(client_socket, response, strlen(response), 0);
+
+                fclose(file_api);
+            }else {
+                printf("❌ API data file not found\n");
+            }
+
+            close(client_socket);
+            continue;
+        }
+
         // 5. Build the physical file path (e.g., "./www/index.html")
         sprintf(file_path, "./www%s", path);
 
