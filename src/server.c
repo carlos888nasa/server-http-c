@@ -68,7 +68,23 @@ void server_start(Server *server){
         }else {
 
             printf("❌ 404 Not Found\n");
+            FILE *not_found_file = fopen("www/error_404.html", "r");
 
+            if(not_found_file != NULL){
+
+                char file_content[BUFFER_SIZE] = {0};
+                char http_header[BUFFER_SIZE] = "HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\n\r\n";
+                char response[BUFFER_SIZE * 2] = {0};
+
+                fread(file_content, 1, BUFFER_SIZE, not_found_file);
+
+                strcat(response, http_header);
+                strcat(response, file_content);
+
+                send(client_socket, response, strlen(response), 0);
+
+                fclose(not_found_file);
+            }
         }
 
         // 7. Close connection

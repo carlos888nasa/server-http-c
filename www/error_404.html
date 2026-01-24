@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Not Found</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f172a; 
+            color: #e2e8f0;            
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .error-code {
+            font-size: 8rem;
+            font-weight: bold;
+            margin: 0;
+            color: #38bdf8; 
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.4); 
+        }
+
+        .error-msg {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #94a3b8;
+        }
+
+        .btn {
+            background-color: #38bdf8;
+            color: #0f172a;
+            padding: 12px 24px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: all 0.3s ease; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .btn:hover {
+            background-color: #0ea5e9;
+            transform: translateY(-2px); 
+        }
+
+        .terminal-text {
+            font-family: monospace;
+            background-color: #1e293b;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 40px;
+            color: #fca5a5; 
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="error-code">404</h1>
+    <p class="error-msg">Oops! The page you are looking for has been deleted or never existed.</p>
+    
+    <a href="/" class="btn">Return to Home</a>
+
+    <div class="terminal-text">
+        > C-Server: file_not_found_exception()
+    </div>
+
+</body>
+</html>
