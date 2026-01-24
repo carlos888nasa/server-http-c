@@ -24,11 +24,14 @@ This project is evolving from a basic socket listener to a fully functional web 
 - [x] **Modular Architecture:** Separation of concerns (Server logic, HTTP protocol, File handling).
 - [x] **HTTP/1.1 Parser:** Manual parsing of Headers, Methods (GET, POST), and Bodies.
 - [ ] **Concurrency (Thread Pool):** A pre-allocated pool of worker threads ("Boss-Worker" model) to handle high-traffic loads efficiently.
-- [ ] **Static File Serving:** Serving HTML, CSS, JS, and images from the disk.
+- [x] **Static File Serving:** Serving HTML, CSS, JS, and images from the disk.
 - [ ] **MIME Type Support:** Dynamic content-type headers based on file extensions.
-- [ ] **Error Handling:** robust 404 (Not Found) and 500 (Internal Server Error) pages.
-- [ ] **HTTP Router:** URL parsing to direct traffic between files and APIs.
-- [ ] **JSON API Endpoint:** Serving dynamic data for backend applications.
+- [x] **Error Handling:** robust 404 (Not Found) and 500 (Internal Server Error) pages.
+- [x] **HTTP Router:** URL parsing to direct traffic between files and APIs.
+- [x] **JSON API Endpoint:** Serving dynamic data for backend applications.
+- [ ] **Security (Path Traversal):** Blocking malicious requests trying to access root files via `../`.
+- [ ] **POST Requests:** Handling data submission from HTML forms or API clients.
+- [ ] **Custom Logger:** Real-time access logs with timestamps and status codes.
 
 ## 🛠️ Technical Architecture
 
@@ -44,6 +47,15 @@ The server follows a **Boss-Worker Multithreading Pattern**:
 * **OS:** Linux (Ubuntu/Debian) or Windows via WSL2.
 * **Compiler:** GCC.
 * **Build Tool:** GNU Make.
+
+## 🌐 Supported Endpoints
+
+| Method | Endpoint      | Description                                      | Content-Type       |
+|--------|---------------|--------------------------------------------------|--------------------|
+| GET    | `/`           | Redirects to `index.html` (Homepage)             | `text/html`        |
+| GET    | `/api`        | Returns backend server status data               | `application/json` |
+| GET    | `/*`          | Dynamic file router (fetches matching file)      | `text/html`        |
+| GET    | `/invalid`    | Returns custom Dark Mode 404 Page                | `text/html`        |
 
 ### Installation & Usage
 
@@ -75,6 +87,7 @@ The server follows a **Boss-Worker Multithreading Pattern**:
 ├── src/            # Source code (.c)
 ├── include/        # Header files (.h)
 ├── bin/            # Compiled executables (ignored by git)
+├── data/           # Private Server Data (JSON API files)
 ├── www/            # Static website files (HTML, CSS)
 ├── Makefile        # Build configuration
 └── README.md       # Documentation
