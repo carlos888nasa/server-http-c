@@ -16,4 +16,6 @@ void server_start(Server *server);
 
 Server server_constructor(int port);
 
+const char* get_content_type(const char *path);
+
 #endif 
