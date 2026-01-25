@@ -70,17 +70,19 @@ void server_start(Server *server){
         }
 
         // 4. autocorrect path
-        if (strcmp(path, "/") == 0) {
+       if (strncmp(path, "/api", 4)){
+            if (strcmp(path, "/") == 0) {
             strncpy(path, "/index.html", sizeof(path) - 1);
             path[sizeof(path)-1] = '\0';
-        } else {
+            } else {
             char *last_slash = strrchr(path, '/');
             char *dot_after_slash = (last_slash) ? strchr(last_slash, '.') : NULL;
             // If there is no period (.), we assume it is an HTML file
             if (!dot_after_slash) {
                 strncat(path, ".html", sizeof(path) - strlen(path) - 1);
+                }
             }
-        }
+       }
 
         //5. route bulding 
         if (!strncmp(path, "/api", 4)) {
