@@ -2,12 +2,26 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <unistd.h>
+#include <unistd.h> 
+#include <stdlib.h>
+#include <signal.h>
 
 #include "server.h"
 
 #define NUM_COLA 1024
 #define BUFFER_SIZE 4096
+
+int global_server_socket = -1; // Global variable to hold the server socket for signal handling
+
+void handle_sigint(int sig) {
+    printf("\n\n🛑 Caught signal %d (Ctrl+C). Shutting down gracefully...\n", sig);
+    if (global_server_socket != -1) {
+        close(global_server_socket);
+        printf("✅ Server socket closed successfully. Port is now free.\n");
+    }
+    printf("👋 Goodbye!\n");
+    exit(0);
+}
 
 // Function to determine content type based on file extension
 const char* get_content_type(const char *path) {
@@ -27,6 +41,9 @@ const char* get_content_type(const char *path) {
 
 // Main server loop: Keeps the server running forever
 void server_start(Server *server){
+
+    global_server_socket = server->socket; // Set global variable for signal handling
+    signal(SIGINT, handle_sigint); // Register signal handler for graceful shutdown
 
     while(1) {
 
