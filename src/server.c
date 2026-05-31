@@ -8,7 +8,7 @@
 
 #include "server.h"
 
-#define NUM_COLA 1024
+#define LISTEN_BACKLOG SOMAXCONN
 #define BUFFER_SIZE 4096
 
 int global_server_socket = -1; // Global variable to hold the server socket for signal handling
@@ -115,7 +115,7 @@ void server_start(Server *server){
 
         printf("DEBUG -> Intentando abrir el archivo real: '%s'\n", real_file_path);
         
-        FILE *file = fopen(real_file_path, "r");
+        FILE *file = fopen(real_file_path, "rb"); // Open in binary mode to handle all file types
         if(file != NULL){
 
             printf("✅ Serving file: %s\n", real_file_path);
@@ -186,7 +186,7 @@ Server server_constructor(int port){
     bind(server.socket, (struct sockaddr*)&server.address, sizeof(server.address));
 
     // Start listening for incoming connections
-    listen(server.socket, NUM_COLA);
+    listen(server.socket, LISTEN_BACKLOG);
 
     return server; 
 
