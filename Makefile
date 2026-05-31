@@ -1,6 +1,6 @@
 CC = gcc 
 CFLAGS = -Wall -Wextra -g -I./include
-SRC = src/server.c src/main.c
+SRC = $(wildcard src/*.c)
 TARGET = bin/server
 
 all: clean $(TARGET)
