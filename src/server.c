@@ -15,19 +15,20 @@ int global_server_socket = -1;
 
 // Graceful shutdown handler
 void handle_sigint(int sig) {
-    const char *msg = "\n\n Caught signal %d (Ctrl+C). Shutting down gracefully...\n";
-    write(STDOUT_FILENO, msg, snprintf(NULL, 0, msg, sig)); // Async-safe logging
+    const char *msg1 = "\n\n Caught signal %d (Ctrl+C). Shutting down gracefully...\n";
+    const char *msg2 = " Server socket closed successfully. Port is now free.\n";
+    const char *msg3 = "Goodbye!\n";
+
+    write(STDOUT_FILENO, msg1, strlen(msg1)); // Async-safe logging
     
     if (global_server_socket != -1) {
         close(global_server_socket);
-        const char *msg2 = " Server socket closed successfully. Port is now free.\n";
         write(STDOUT_FILENO, msg2, strlen(msg2)); // Async-safe logging
     }
     
-     const char *msg3 = "Goodbye!\n";
     write(STDOUT_FILENO, msg3, strlen(msg3)); // Async-safe logging
     (void)sig; // Silence unused parameter warning
-    exit(0); // Terminate the program safely
+    _exit(0); // Terminate the program safely
 }
 
 // Main server loop: Keeps the server running forever

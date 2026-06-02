@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
+
 #include "../include/response.h"
 #include "../include/mime.h"
 #include "../include/request.h"
