@@ -1,19 +1,22 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <unistd.h>
 #include "../include/request.h"
 
 int parse_request(int client_socket, Request *request) {
-    char buffer[BUFFER_SIZE] = {0};
 
-    ssize_t received = recv(client_socket, buffer, sizeof(buffer) - 1, 0);
+    struct timeval timeout = {5, 0}; // 5 seconds timeout
+    setsockopt(client_socket, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+   
+    ssize_t received = recv(client_socket, request->raw, sizeof(request->raw) - 1, 0);
     if (received <= 0) {
         return -1; // Error or connection closed
     }
     request->raw[received] = '\0'; // Null-terminate the received data
 
-    printf("Received request:\n%s\n", request->raw);
+    printf("Received request:\n%.80s\n", request->raw);
     sscanf(request->raw, "%15s %255s", request->method, request->path);
 
     char *q = strchr(request->path, '?');  if (q) *q = '\0';

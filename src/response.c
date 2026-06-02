@@ -3,8 +3,7 @@
 #include <sys/socket.h>
 #include "../include/response.h"
 #include "../include/mime.h"
-
-#define BUFFER_SIZE 4096
+#include "../include/request.h"
 
 void send_response(int socket, const char *real_file_path) {
     FILE *file = fopen(real_file_path, "rb"); // 'rb' for safe binary reading

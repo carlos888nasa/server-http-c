@@ -3,6 +3,6 @@
 
 #include "request.h"
 
-void route(Request *request, char *out_path);
+void route(Request *request, char *out_path, size_t out_path_size);
 
 #endif

@@ -3,7 +3,7 @@
 
 #include "../include/router.h"
 
-void route(Request *request, char *out_path) {
+void route(Request *request, char *out_path, size_t out_path_size) {
     
     if (strncmp(request->path, "/api", 4) != 0) {
         if (strcmp(request->path, "/") == 0) {
@@ -21,12 +21,12 @@ void route(Request *request, char *out_path) {
 
     if (!strncmp(request->path, "/api", 4)) {
         if (!strcmp(request->path, "/api") || !strcmp(request->path, "/api/")) {
-            snprintf(out_path, 512, "./data/status.json");
+            snprintf(out_path, out_path_size, "./data/status.json");
         } else {
-            snprintf(out_path, 512, "./data%s", request->path + 4);
+            snprintf(out_path, out_path_size, "./data%s", request->path + 4);
         }
     } else {
-        snprintf(out_path, 512, "./www%s", request->path);
+        snprintf(out_path, out_path_size, "./www%s", request->path);
     }
     
     printf("DEBUG -> Route: '%s'\n", out_path);

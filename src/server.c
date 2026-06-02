@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
@@ -14,14 +15,18 @@ int global_server_socket = -1;
 
 // Graceful shutdown handler
 void handle_sigint(int sig) {
-    printf("\n\n Caught signal %d (Ctrl+C). Shutting down gracefully...\n", sig);
+    const char *msg = "\n\n Caught signal %d (Ctrl+C). Shutting down gracefully...\n";
+    write(STDOUT_FILENO, msg, snprintf(NULL, 0, msg, sig)); // Async-safe logging
     
     if (global_server_socket != -1) {
         close(global_server_socket);
-        printf(" Server socket closed successfully. Port is now free.\n");
+        const char *msg2 = " Server socket closed successfully. Port is now free.\n";
+        write(STDOUT_FILENO, msg2, strlen(msg2)); // Async-safe logging
     }
     
-    printf("Goodbye!\n");
+     const char *msg3 = "Goodbye!\n";
+    write(STDOUT_FILENO, msg3, strlen(msg3)); // Async-safe logging
+    (void)sig; // Silence unused parameter warning
     exit(0); // Terminate the program safely
 }
 
@@ -49,7 +54,7 @@ void server_start(Server *server){
             
             // 3. Route the request to a physical file path using our Router module
             char real_file_path[512] = {0};
-            route(&req, real_file_path);
+            route(&req, real_file_path, sizeof(real_file_path));
 
             // 4. Send the correct response back to the client using our Response module
             send_response(client_socket, real_file_path);
