@@ -24,8 +24,8 @@ int parse_request(int client_socket, Request *request) {
     char *cr = strchr(request->path, '\r'); if (cr) *cr = '\0';
     char *nl = strchr(request->path, '\n'); if (nl) *nl = '\0';
 
-    if (strstr(request->path, "..")) {
-        const char *bad_req = "HTTP/1.1 400 Bad Request\r\nContent-Type: text/html\r\n\r\n<h1>400 Bad Request: Nice try, hacker!</h1>";
+    if (strcmp(request->method, "GET") != 0) {
+        const char *bad_req = "HTTP/1.1 405 Method Not Allowed\r\nContent-Type: text/html\r\n\r\n<h1>405 Method Not Allowed: Nice try, hacker!</h1></h1>";
         send(client_socket, bad_req, strlen(bad_req), 0);
         return -1; // Abort connection
     }

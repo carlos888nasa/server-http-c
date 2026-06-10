@@ -129,9 +129,18 @@ Server server_constructor(int port){
     // Create TCP socket
     server.socket = socket(AF_INET, SOCK_STREAM, 0);
 
+    if (server.socket < 0) {
+        perror("[FATAL ERROR] Socket creation failed");
+        exit(EXIT_FAILURE);
+    }
+
     // SO_REUSEADDR prevents "Address already in use" errors after restart
     int opt = 1;
-    setsockopt(server.socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+    if (setsockopt(server.socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+        perror("[FATAL ERROR] setsockopt(SO_REUSEADDR) failed");
+        close(server.socket);
+        exit(EXIT_FAILURE);
+    }
 
     // Define address structure
     server.address.sin_family = AF_INET;
