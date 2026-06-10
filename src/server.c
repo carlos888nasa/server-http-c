@@ -1,3 +1,5 @@
+#define _POSIX_C_SOURCE 200809L // For sigaction and other modern POSIX features
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -17,28 +19,13 @@
 
 int global_server_socket = -1; 
 ThreadPoolManager *pool = NULL;
+volatile sig_atomic_t shutdown_requested = 0;
 
 // Graceful shutdown handler
 void handle_sigint(int sig) {
-    const char *msg1 = "\n\n Caught signal (Ctrl+C). Shutting down gracefully...\n";
-    const char *msg2 = " Server socket closed successfully. Port is now free.\n";
-    const char *msg3 = "Goodbye!\n";
-
-    write(STDOUT_FILENO, msg1, strlen(msg1)); // Async-safe logging
-
-    if(pool != NULL) {
-        threadpool_destroy(pool);
-        write(STDOUT_FILENO, " Thread pool destroyed successfully.\n", 36); // Async-safe logging
-    }
     
-    if (global_server_socket != -1) {
-        close(global_server_socket);
-        write(STDOUT_FILENO, msg2, strlen(msg2)); // Async-safe logging
-    }
-    
-    write(STDOUT_FILENO, msg3, strlen(msg3)); // Async-safe logging
     (void)sig; // Silence unused parameter warning
-    _exit(0); // Terminate the program safely
+    shutdown_requested = 1; // Set flag to indicate shutdown
 }
 
 void handle_client(void *arg) {
@@ -65,7 +52,12 @@ void handle_client(void *arg) {
 void server_start(Server *server){
 
     global_server_socket = server->socket;
-    signal(SIGINT, handle_sigint);
+
+    struct sigaction sa;
+    sa.sa_handler = handle_sigint;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGINT, &sa, NULL);
 
     long thread_count = sysconf(_SC_NPROCESSORS_ONLN); // Optimal thread count based on CPU cores
     printf("Detected %ld CPU cores. Starting thread pool with %ld threads.\n", thread_count, thread_count);
@@ -79,11 +71,14 @@ void server_start(Server *server){
     printf("Server is running and waiting for connections...\n");
     printf("Press Ctrl+C to stop the server safely.\n\n");
 
-    while(1) {
+    while(!shutdown_requested) {
         
         // 1. Accept incoming client connection
         int client_socket = accept(server->socket, NULL, NULL);
         if (client_socket < 0) {
+            if (errno == EINTR) {
+                break; // Exit the loop to start shutdown process
+            }
             printf("[ERROR] Failed to accept connection: %s\n", strerror(errno));
             continue;
         }
@@ -104,6 +99,24 @@ void server_start(Server *server){
             free(client_socket_ptr);
         }
     }
+
+    const char *msg1 = "\n\n Caught signal (Ctrl+C). Shutting down gracefully...\n";
+    const char *msg2 = " Server socket closed successfully. Port is now free.\n";
+    const char *msg3 = "Goodbye!\n";
+
+    write(STDOUT_FILENO, msg1, strlen(msg1)); // Async-safe logging
+
+    if(pool != NULL) {
+        threadpool_destroy(pool);
+        write(STDOUT_FILENO, " Thread pool destroyed successfully.\n", 36); // Async-safe logging
+    }
+    
+    if (global_server_socket != -1) {
+        close(global_server_socket);
+        write(STDOUT_FILENO, msg2, strlen(msg2)); // Async-safe logging
+    }
+    
+    write(STDOUT_FILENO, msg3, strlen(msg3)); // Async-safe logging
 
 }
 
