@@ -1,0 +1,27 @@
+name: C Web Server CI
+
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Descargar el código
+      uses: actions/checkout@v4
+
+    - name: Compilar con Detectores de Memoria (Sanitizers)
+      run: make CFLAGS="-Wall -Wextra -Werror -fsanitize=address,undefined"
+
+    - name: Levantar el servidor en segundo plano
+      
+      run: ./bin/server 8080 &
+
+    - name: Esperar 2 segundos a que arranque
+      run: sleep 2
+
+    - name: Prueba 1 - Cargar la ruta principal
+      run: curl -f http://localhost:8080/
+
+    - name: Prueba 2 - Cargar la API
+      run: curl -f http://localhost:8080/api
